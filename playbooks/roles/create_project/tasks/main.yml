@@ -1,0 +1,82 @@
+---
+
+- name: Create test project | check if already exists
+  shell: "oc --config=../kubeconfig get projects"
+  register: proj_exists
+
+- name: Create test project | delete if exists
+  shell: "oc --config=../kubeconfig delete project {{testproject}}" 
+  when: "'{{testproject}}' in proj_exists.stdout"
+
+- name: Create test project | create the test project
+  shell: "oc --config=../kubeconfig new-project {{testproject}}"
+
+- name: deploy application | prepare nginx yaml
+  template:
+    src: nginx.yaml
+    dest: roles/create_project/files/nginx.yaml
+  when: storageclass is not defined
+
+- name: deploy application | prepare nginx yaml
+  template:
+    src: nginx_with_pvc.yaml
+    dest: roles/create_project/files/nginx.yaml
+  when: storageclass is defined
+
+- name: deploy application | prepare nginx pvc yaml
+  template:
+    src: nginxpvc.yaml
+    dest: roles/create_project/files/nginxpvc.yaml
+  when: storageclass is defined
+
+- name: deploy application | prepare route yaml
+  template:
+    src: nginxroute.yaml
+    dest: roles/create_project/files/nginxroute.yaml
+
+- name: deploy application | prepare service yaml
+  template:
+    src: nginxsvc.yaml
+    dest: roles/create_project/files/nginxsvc.yaml
+
+- name: deploy application | create nginx pvc
+  shell: "oc --config=../kubeconfig create -f roles/create_project/files/nginxpvc.yaml"
+  when: storageclass is defined
+
+- name: deploy application | deploy nginx deploymentconfig
+  shell: "oc --config=../kubeconfig create -f roles/create_project/files/nginx.yaml"
+
+- name: deploy application | create nginx service
+  shell: "oc --config=../kubeconfig create -f roles/create_project/files/nginxsvc.yaml"
+
+- name: deploy application | create route for nginx
+  shell: "oc --config=../kubeconfig create -f roles/create_project/files/nginxroute.yaml"
+
+- name: check | pods are up
+  shell: "oc get pods -n {{testproject}} |grep -i nginx|grep -i Running"
+  register: oc_get_pods
+  until: "'Running' in oc_get_pods.stdout and 'deploy' not in oc_get_pods.stdout"
+  retries: 60
+  delay: 2
+  delegate_to: "{{groups['masters'] | first}}"
+
+- name: pause for 1 minute
+  pause:
+    minutes: 1
+
+- name: check | app answers via router
+  uri:
+    url: http://nginx-{{testproject}}.{{ocpappsdomain}}
+    status_code: 200
+    return_content: yes
+  when: storageclass is not defined
+
+- name: check | app answers via router
+  uri:
+    url: http://nginx-{{testproject}}.{{ocpappsdomain}}
+    status_code: 403
+    return_content: yes
+  when: storageclass is defined
+
+- name: Delete a project
+  shell: "oc --config=../kubeconfig delete project {{testproject}}"

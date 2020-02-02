@@ -1,0 +1,65 @@
+---
+################ Rhev Connection ######################
+template: rhel76cloudinit
+roottemppas: redhat
+#################General Parameters#######################
+ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o ControlMaster=auto -o ControlPersist=60s -o PreferredAuthentications=publickey'
+ansible_become: false
+cluster_timezone: UTC
+#ntp=["10.56.190.1","10.56.190.2"]
+searchdomain: ocp.rhevdemo.com
+dns: ["10.35.76.222","8.8.8.8"]
+keepalived_vip: 10.35.76.220
+keepalived_interface: eth0
+keepalived_vrrpid: 1
+routervialb: true
+
+#sanity tests
+ocpappsdomain: apps.openshift.ocp.rhevdemo.com
+openshift_console_api: openshift.ocp.rhevdemo.com:8443
+localregistry: docker.io/nginx:latest
+testproject: scoobydoo
+storageclass: glusterfs-storage
+
+#ocpdbtest
+#localregistry: quay.io/grakover/ocpdbtest:latest
+#testproject: podtest
+
+
+#for glusterfs
+openshift_storage_glusterfs_wipe: true
+openshift_storage_glusterfs_storageclass: true
+openshift_storage_glusterfs_storageclass_default: true
+openshift_storage_glusterfs_block_deploy: true
+openshift_storage_glusterfs_block_host_vol_size: 30
+openshift_storage_glusterfs_block_storageclass: true
+openshift_storage_glusterfs_block_storageclass_default: false
+openshift_storage_glusterfs_image: registry.redhat.io/rhgs3/rhgs-server-rhel7:v3.11
+openshift_storage_glusterfs_block_image: registry.redhat.io/rhgs3/rhgs-gluster-block-prov-rhel7:v3.11
+openshift_storage_glusterfs_heketi_image: registry.redhat.io/rhgs3/rhgs-volmanager-rhel7:v3.11
+
+#for Connected
+rheluser: rockocoop
+rhelpass:
+  __ansible_vault: >
+    $ANSIBLE_VAULT;1.1;AES256
+
+    33323337383765306138363233313435386533343263613864356335343435333935356163646338
+
+    6232343030376635363865636335306234363631653634620a643537373231663366643564616533
+
+    32393364663335343039653832373635323735666338653232646336623832323930313263333337
+
+    3837613638343765340a316363663132643132306663666536383262613438313265336361636566
+
+    3562
+rhelpool: 8a85f99c6901e2240169036aacd366d9
+
+#grafanaURL: http://10.35.76.235:3000
+#grafanaPass: admin
+#grafanaClusterName: OCP1
+#grafmas: ocpmstr2.ocp.rhevdemo.com
+#prometheusURL: https://prometheus-k8s-openshift-monitoring.apps.openshift.ocp.rhevdemo.com
+
+currentContext: openshift-ocp-rhevdemo-com
+apiPort: 8443

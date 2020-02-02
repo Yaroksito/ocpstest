@@ -1,0 +1,16 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    openshift.io/host.generated: "true"
+  labels:
+    app: nginx
+  name: nginx
+  namespace: yaronocps
+spec:
+  host: nginx-yaronocps.apps.openshift.ocp.rhevdemo.com
+  to:
+    kind: Service
+    name: nginx
+    weight: 100
+  wildcardPolicy: None

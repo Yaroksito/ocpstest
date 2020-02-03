@@ -57,3 +57,11 @@ The following parameters are needed to run the tests, in addition to a valid OCP
 	localregistry: <registry where nginx image >
 	testproject: <name of temporary project created for test app>  - default value is "scoobydoo"
     storageclass: <persistent storage class type> - default is "glusterfs-storage" (optional)
+
+Certificates Test
+
+- it checks the Master API and router apps certificates
+- a warning message is displyed to if one of is them failed
+- it indicates 14 days in advanced
+- please define the cluster_url in your inventory <masterapifqdn:8443> i.e routerfqdn: "openshift.ocp3.rhevdemo.com:8443"
+- please define the app_url in your inventory <routerfqdn> i.e masterapifqdn: "console.apps.openshift.ocp3.rhevdemo.com"

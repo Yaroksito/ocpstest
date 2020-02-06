@@ -5,6 +5,6 @@ openshift_console_api=8443
 localregistry=10.0.0.191
 insecure=True
 routerfqdn=console-openshift-console.apps.ocp42.sales.lab.tlv.redhat.com
-
+masterapifqdn=console-openshift-console.apps.ocp42.sales.lab.tlv.redhat.com
 [masters]
 allinonevm   ansible_ssh_host=10.0.0.191

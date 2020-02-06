@@ -8,7 +8,7 @@ metadata:
   name: nginx
   namespace: yaronocps
 spec:
-  host: nginx-yaronocps.apps.openshift.ocp.rhevdemo.com
+  host: nginx-yaronocps.apps.ocp42.sales.lab.tlv.redhat.com
   to:
     kind: Service
     name: nginx

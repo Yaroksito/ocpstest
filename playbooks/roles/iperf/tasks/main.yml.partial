@@ -1,0 +1,44 @@
+---
+  - name: copy the conf file for oc client
+    fetch:
+      src: /root/.kube/config
+      dest: ../kubconfig
+      flat: yes
+
+  - name: prepare admin user
+    shell: oc adm policy add-scc-to-user privileged system:serviceaccount:default:default
+
+  - name: prepare admin user
+    shell: oc adm policy add-scc-to-group anyuid system:authenticated
+ 
+  - name: Create variable from command
+    shell: "oc --config=../kubconfig get route --no-headers | awk '{print $2}'"
+    register: route
+
+  - name: Create variable from command
+    shell: "oc --config=../kubconfig get svc | grep server | awk '{print $3}'"
+    register: svc
+
+  - name: pause for 20 seconds
+    pause:
+      seconds: 20
+    when: route
+
+  - name: test bandwidth
+    uri:
+      url: "http://{{ route.stdout | trim }}/iperf/api.cgi?server={{ svc.stdout | trim }},port=5001,type=json"
+      method: GET
+      return_content: yes
+      status_code: 200
+    register: bandwidth
+    until: bandwidth.failed == false
+    retries: 60
+    delay: 5
+
+  - debug: 
+      var: bandwidth
+
+#  - name: test bandwidth
+#    shell: "curl -X GET http://{{ route.stdout }}/iperf/api.cgi?server={{ svc.stdout }},port=5001,type=json | jq"
+#    register: bandwidth
+#  - debug: var=bandwidth

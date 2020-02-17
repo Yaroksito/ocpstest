@@ -19,18 +19,12 @@ spec:
         - name: web
           containerPort: 80
         volumeMounts:
-        - name: glusterfs-storage-vol1
-          mountPath: /usr/share/nginx/html
-          readOnly: false
         - mountPath: /var/log/nginx
           name: log
       volumes:
-      - name: glusterfs-storage-vol1
-        persistentVolumeClaim:
-          claimName: glusterfs-storage-claim
       - name: log
         emptyDir: {}
-      imagePullPolicy: Always
+      imagePullPolicy: Always  
   triggers:
   - type: ConfigChange
   strategy:

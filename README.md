@@ -1,5 +1,8 @@
 # ocpsanitytests
-ansible project for testing general OCP functionality
+It consist of 3 automation to test OCP 3.x / OCP 4.x clusters post deployment:
+- OpenShift cluster general functionality - it pull nginx image and create an appliction on specific namespace, test the svc, route and PVC
+- OpenShift certificate expiration check - it inspect the expiration route and api OCP certificate and output message accordingelly 
+- OpenShift SDN throughput test - it deploys 2 intiafinity iperf3 server & client pods and test the SDN throughput between them
 
 
 
@@ -58,10 +61,20 @@ The following parameters are needed to run the tests, in addition to a valid OCP
 	testproject: <name of temporary project created for test app>  - default value is "scoobydoo"
     storageclass: <persistent storage class type> - default is "glusterfs-storage" (optional)
 
-Certificates Test
+For OCP 4:
 
-- it checks the Master API and router apps certificates
-- a warning message is displyed to if one of is them failed
-- it indicates 14 days in advanced
-- please define the cluster_url in your inventory <masterapifqdn:8443> i.e routerfqdn: "openshift.ocp3.rhevdemo.com:8443"
-- please define the app_url in your inventory <routerfqdn> i.e masterapifqdn: "console.apps.openshift.ocp3.rhevdemo.com"
+Copy kubeconfig file to base directory of this repo
+
+Add the following 2 parameters for running with OCP 4
+
+	etcdSkip=True
+	ocpversion=4
+
+Run playbook sanitytests_ocp4.yaml
+
+NOTE:  when running on ocp 4 the following steps are skipped - etcd tests, reboot of nodes, selinux check on nodes
+
+
+For the certificate expiration test:
+Please provide your OCP url as the value for the keys "routerfqdn" "masterapifqdn"
+in roles/cer_exp/defaults/main.yml file

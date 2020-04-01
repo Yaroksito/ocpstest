@@ -6,6 +6,11 @@
 
   tasks:
 
+  - name: copy the conf file for oc client
+    fetch:
+      src: /root/.kube/config
+      dest: ../kubeconfig
+      flat: yes
 
   - name: prepare admin user
     shell: oc --config=../kubeconfig adm policy add-scc-to-user privileged system:serviceaccount:default:default

@@ -28,66 +28,64 @@
   - name: create iperf3 project
     k8s:
       state: present
-      src: roles/iperf/files/iperf-client-python/project.yaml
+      src: roles/iperf/templates/project.yaml
 
   - name: use antiafinity deployment
     k8s:
       state: present
-      src: roles/iperf/files/iperf-client-python/pod-deployment-antiafinity.yaml
+      src: roles/iperf/templates/pod-deployment-antiafinity.yaml
 
   - name: deploy iperf server
     k8s:
       state: present
-      src: roles/iperf/files/iperf-server/pod-deployment.yaml
+      src: roles/iperf/templates/server-deployment.yaml
 
   - name: create server svc
     k8s:
       state: present
-      src: roles/iperf/files/iperf-server/service.yaml
-
-  - pause:
-      seconds: 30
+      src: roles/iperf/templates/server-svc.yaml
 
   - name: create client svc
     k8s:
       state: present
-      src: roles/iperf/files/iperf-client-python/service.yaml
+      src: roles/iperf/templates/client-svc.yaml
 
   - name: create client route
     k8s:
       state: present
-      src: roles/iperf/files/iperf-client-python/route.yaml
-
-  - pause:
-      seconds: 30
+      src: roles/iperf/templates/route.yaml
 
   - name: Create variable from command
-    shell: "oc --config=../kubeconfig get route -n iperf3 --no-headers | awk '{print $2}'"
+    shell: "oc --config=../kubeconfig get route --no-headers | awk '{print $2}'"
     register: route
 
   - name: Create variable from command
-    shell: "oc --config=../kubeconfig get svc -n iperf3 | grep server | awk '{print $3}'"
+    shell: "oc --config=../kubeconfig get svc | grep server | awk '{print $3}'"
     register: svc
+
+  - name: pause for 20 seconds
+    pause:
+      seconds: 20
+    when: route
 
   - name: test bandwidth
     uri:
-      #url: "http://{{ route.stdout | trim }}/iperf/api.cgi?server={{ svc.stdout | trim }},port=5001,type=json"
-      url: "http://{{ route.stdout | trim }}/iperf/state?server={{ svc.stdout | trim }},port=5001,type=json,warning=600m,critical=500m" 
+      url: "http://{{ route.stdout | trim }}/iperf/api.cgi?server={{ svc.stdout | trim }},port=5001,type=json"
       method: GET
       return_content: yes
       status_code: 200
     register: bandwidth
     until: bandwidth.failed == false
-    retries: 5
+    retries: 60
     delay: 5
 
   - debug: 
       var: bandwidth
 
- # - name: delete project
- #   k8s:
- #     state: absent
- #     api_version: v1
- #     kind: Namespace
- #     namespace: iperf3
- #     name: iperf3 
+  - name: delete project
+    k8s:
+      state: absent
+      api_version: v1
+      kind: Namespace
+      namespace: iperf3
+      name: iperf3 

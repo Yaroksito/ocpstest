@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: iperf3-client
-          image: magreenb/mgop:202003191152
+          image: quay.io/ypery/iperf3-client-python
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

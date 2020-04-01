@@ -71,8 +71,7 @@
 
   - name: test bandwidth
     uri:
-      #url: "http://{{ route.stdout | trim }}/iperf/api.cgi?server={{ svc.stdout | trim }},port=5001,type=json"
-      url: "http://{{ route.stdout | trim }}/iperf/state?server={{ svc.stdout | trim }},port=5001,type=json,warning=600m,critical=500m" 
+      url: "http://{{ route.stdout | trim }}/iperf/state?server={{ svc.stdout | trim }},port=5001,type=json,warning=7000m,critical=6000m" 
       method: GET
       return_content: yes
       status_code: 200
@@ -84,10 +83,10 @@
   - debug: 
       var: bandwidth
 
- # - name: delete project
- #   k8s:
- #     state: absent
- #     api_version: v1
- #     kind: Namespace
- #     namespace: iperf3
- #     name: iperf3 
+  - name: delete project
+    k8s:
+      state: absent
+      api_version: v1
+      kind: Namespace
+      namespace: iperf3
+      name: iperf3 

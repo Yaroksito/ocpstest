@@ -1,0 +1,63 @@
+{
+    "apiVersion": "v1",
+    "kind": "Namespace",
+    "metadata": {
+        "annotations": {
+            "openshift.io/description": "",
+            "openshift.io/display-name": "",
+            "openshift.io/sa.scc.mcs": "s0:c28,c22",
+            "openshift.io/sa.scc.supplemental-groups": "1000800000/10000",
+            "openshift.io/sa.scc.uid-range": "1000800000/10000"
+        },
+        "creationTimestamp": "2020-03-31T19:56:57Z",
+        "deletionTimestamp": "2020-04-01T11:08:04Z",
+        "name": "iperf3",
+        "resourceVersion": "102535509",
+        "selfLink": "/api/v1/namespaces/iperf3",
+        "uid": "c72b45b2-7389-11ea-b903-005056954a92"
+    },
+    "spec": {
+        "finalizers": [
+        ]
+    },
+    "status": {
+        "conditions": [
+            {
+                "lastTransitionTime": "2020-04-01T11:08:10Z",
+                "message": "Discovery failed for some groups, 1 failing: unable to retrieve the complete list of server APIs: subresources.kubevirt.io/v1alpha3: the server is currently unable to handle the request",
+                "reason": "DiscoveryFailed",
+                "status": "True",
+                "type": "NamespaceDeletionDiscoveryFailure"
+            },
+            {
+                "lastTransitionTime": "2020-04-01T11:08:14Z",
+                "message": "All legacy kube types successfully parsed",
+                "reason": "ParsedGroupVersions",
+                "status": "False",
+                "type": "NamespaceDeletionGroupVersionParsingFailure"
+            },
+            {
+                "lastTransitionTime": "2020-04-01T11:08:47Z",
+                "message": "All content successfully deleted, may be waiting on finalization",
+                "reason": "ContentDeleted",
+                "status": "False",
+                "type": "NamespaceDeletionContentFailure"
+            },
+            {
+                "lastTransitionTime": "2020-04-01T11:08:54Z",
+                "message": "All content successfully removed",
+                "reason": "ContentRemoved",
+                "status": "False",
+                "type": "NamespaceContentRemaining"
+            },
+            {
+                "lastTransitionTime": "2020-04-01T11:08:54Z",
+                "message": "All content-preserving finalizers finished",
+                "reason": "ContentHasNoFinalizers",
+                "status": "False",
+                "type": "NamespaceFinalizersRemaining"
+            }
+        ],
+        "phase": "Terminating"
+    }
+}

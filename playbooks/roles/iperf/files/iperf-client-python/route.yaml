@@ -1,25 +1,13 @@
-kind: Route
 apiVersion: route.openshift.io/v1
+kind: Route
 metadata:
-  name: iperf-client
+  name: iperf3-client
   namespace: iperf3
-  selfLink: /apis/route.openshift.io/v1/namespaces/iperf3/routes/iperf-client
 spec:
-  host: iperf.apps.ocp42.sales.lab.tlv.redhat.com
-  subdomain: ''
+  port:
+    targetPort: 8080
   to:
     kind: Service
     name: iperf3-client
     weight: 100
-  port:
-    targetPort: 8080
   wildcardPolicy: None
-status:
-  ingress:
-    - host: iperf.apps.ocp42.sales.lab.tlv.redhat.com
-      routerName: default
-      conditions:
-        - type: Admitted
-          status: 'True'
-      wildcardPolicy: None
-      routerCanonicalHostname: apps.ocp42.sales.lab.tlv.redhat.com

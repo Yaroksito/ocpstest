@@ -1,5 +1,5 @@
-FROM centos
-MAINTAINER Oren Oichman
+FROM registry.redhat.io/ubi8
+MAINTAINER Yaron Perry
 
 COPY run-server.sh /usr/sbin/
 RUN  useradd iperf && yum update -y && yum install -y iperf3 && yum clean all

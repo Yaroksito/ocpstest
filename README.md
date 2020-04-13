@@ -1,17 +1,18 @@
 # ocpsanitytests
-It consist of 3 automation to test OCP 3.x / OCP 4.x clusters post deployment:
-- OpenShift cluster general functionality - it pull nginx image and create an appliction on specific namespace, test the svc, route and PVC
-- OpenShift certificate expiration check - it inspect the expiration route and api OCP certificate and output message accordingelly 
-- OpenShift SDN throughput test - it deploys 2 intiafinity iperf3 server & client pods and test the SDN throughput between them
+It consist of 3 automation tests to ensure that OCP 3.x / OCP 4.x clustes is ready:
+- OpenShift cluster general functionality - it pulls nginx image and creates appliction on specific namespace, test the svc, route and PVC as well as DNS and registry. 
+- OpenShift certificate expiration check - it inspects the expiration route and api OCP certificate and output message accordingelly 
+- OpenShift SDN throughput test - it deploys 2 antiafinity iperf3 server & client pods and test the SDN throughput between them. It also provides Warnning or Critical message according to the trashhold.
 
 
 
 Prerequisites
-Install OCP oc client:
 
-    yum install atomic-openshift-clients
+OCP 4.x/3.x cluster
 
-The following image must be available on a local insecure repository as follows:
+Install oc client
+
+The following image must be available on a local/remote insecure repository as follows:
 
     <registryIP:Port>/openshift3/nginx:latest
 

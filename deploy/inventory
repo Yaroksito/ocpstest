@@ -3,7 +3,7 @@
 #### Ansible Vars
 #################
 ansible_ssh_user=core
-ansible_become=false
+ansible_become=true
 timeout=60
 #searchdomain=ocp3.rhevdemo.com
 #dns=["10.35.76.222","8.8.8.8"]
@@ -16,12 +16,12 @@ timeout=60
 ###################
 ##### sanity tests
 ###################
-ocpappsdomain=apps.ocp42.sales.lab.tlv.redhat.com
-openshift_console_api=apps.ocp42.sales.lab.tlv.redhat.com
+ocpappsdomain=apps.whynot.play.com
+openshift_console_api=apps.whynot.play.com
 localregistry="docker.io/nginx:latest"
 #insecure=True
-testproject=yaronocps
-storageclass=glusterfs-storage
+testproject=sanitytest
+storageclass=rook-ceph-block
 etcdSkip=True
 ocpversion=4
 
@@ -29,19 +29,26 @@ ocpversion=4
 ##### OpenShift Hosts
 #####################
 [masters]
-control-plane-0.ocp42.sales.lab.tlv.redhat.com
-control-plane-1.ocp42.sales.lab.tlv.redhat.com
-control-plane-2.ocp42.sales.lab.tlv.redhat.com
+rocko1-control-0.whynot.play.com
+rocko1-control-1.whynot.play.com
+rocko1-control-2.whynot.play.com
 
 [etcd:children]
 masters
 
 [nodes]
-compute-0.ocp42.sales.lab.tlv.redhat.com
-compute-1.ocp42.sales.lab.tlv.redhat.com
-control-plane-0.ocp42.sales.lab.tlv.redhat.com
-control-plane-1.ocp42.sales.lab.tlv.redhat.com
-control-plane-2.ocp42.sales.lab.tlv.redhat.com
+rocko1-compute-0.whynot.play.com
+rocko1-compute-1.whynot.play.com
+rocko1-compute-2.whynot.play.com
+rocko1-compute-3.whynot.play.com
+rocko1-compute-4.whynot.play.com
+rocko1-compute-5.whynot.play.com
+rocko1-compute-6.whynot.play.com
+rocko1-compute-7.whynot.play.com
+rocko1-compute-8.whynot.play.com
+rocko1-control-0.whynot.play.com
+rocko1-control-1.whynot.play.com
+rocko1-control-2.whynot.play.com
 
 [nodes:children]
 masters

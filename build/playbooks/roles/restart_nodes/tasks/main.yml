@@ -1,0 +1,39 @@
+---
+
+
+- name: node check | check selinux policy
+  selinux:
+    policy: targeted
+    state: enforcing
+  when: ocpversion == 3
+
+- name: node check | insure workaround in place for pods restarts
+  shell:  'echo -e "r /etc/cni/net.d/80-openshift-network.conf\nr /etc/origin/openvswitch/conf.db"  > /usr/lib/tmpfiles.d/cleanup-cni.conf'
+  when: ocpversion == 3
+
+- name: node check | set node as unscheduable
+  shell: "oc --config=../kubeconfig adm manage-node {{ inventory_hostname }} --schedulable=false"
+  register: oc_get_node
+  changed_when: 1==2
+  failed_when: "'SchedulingDisabled' not in oc_get_node.stdout"
+  when: ocpversion == 3
+
+- name: node check | reboot node
+  reboot:
+  when: ocpversion == 3
+
+- name: node check | wait for node to appear as ready
+  shell: "oc --config=../kubeconfig get nodes |grep -i {{ inventory_hostname }}|grep -i Ready"
+  register: oc_node_ready
+  until: "'NotReady' not in oc_node_ready.stdout and 'Ready' in oc_node_ready.stdout"
+  retries: 60
+  delay: 2
+  delegate_to: localhost
+  when: ocpversion == 3
+
+- name: node check | set node as scheduable
+  shell: "oc --config=../kubeconfig adm manage-node {{ inventory_hostname }} --schedulable=true"
+  register: oc_node_up
+  changed_when: 1==2
+  failed_when: "'SchedulingDisabled' in oc_node_up.stdout"
+  when: ocpversion == 3

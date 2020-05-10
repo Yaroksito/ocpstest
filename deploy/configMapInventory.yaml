@@ -12,7 +12,7 @@ data:
     ocpappsdomain=apps.ocp42.sales.lab.tlv.redhat.com
     openshift_console_api=apps.ocp42.sales.lab.tlv.redhat.com
     localregistry="docker.io/nginx:latest"
-    testproject=yaronocps
+    testproject=sanity-test
     storageclass=glusterfs-storage
     etcdSkip=True
     ocpversion=4

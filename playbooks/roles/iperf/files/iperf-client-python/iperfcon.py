@@ -210,7 +210,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         queryComponents = re.split(',|\?', self.path)
         cmd = queryComponents.pop(0)
         try:
-            params = dict(x.split('=') for x in queryComponents)
+            params = dict((k.lower(), v) for k,v in (x.split("=") for x in queryComponents))
         except:
             self.send_response(422)
             return

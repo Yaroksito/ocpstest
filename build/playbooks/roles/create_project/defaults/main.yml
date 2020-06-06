@@ -1,5 +1,5 @@
 ---
 # defaults file for create_project
 testproject: sanitytest
-#storageclass: rook-ceph-block
-ocpversion: 3
+storageclass: thin
+ocpversion: 4

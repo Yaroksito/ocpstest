@@ -1,53 +1,21 @@
 ---
 
 - name: Create test project | check if already exists
-  shell: "oc --config=../kubeconfig get projects"
-  register: proj_exists
-
-- name: Create test project | delete if exists
-  shell: "oc --config=../kubeconfig delete project {{testproject}}" 
-  when: "'{{testproject}}' in proj_exists.stdout"
-  register: deleteproj
-
-- name: pause for 20 seconds
-  pause:
-    seconds: 20 
-  when: deleteproj.changed == true
-
-- name: Create test project | create the test project
-  shell: "oc --config=../kubeconfig new-project {{testproject}}"
-
-- name: deploy application | prepare nginx yaml
-  template:
-    src: nginx.yaml
-    dest: roles/create_project/files/nginx.yaml
-  when: storageclass is not defined
-
-- name: deploy application | prepare nginx yaml
-  template:
-    src: nginx_with_pvc.yaml
-    dest: roles/create_project/files/nginx.yaml
-  when: storageclass is defined
----
-
-- name: Create test project | check if already exists
   shell: "oc get projects"
   register: proj_exists
 
 - name: Create test project | delete if exists
-  shell: "oc delete project {{testproject}}" 
+  shell: "oc delete project {{testproject}}"
   when: "'{{testproject}}' in proj_exists.stdout"
   register: deleteproj
 
 - name: pause for 20 seconds
   pause:
-    seconds: 20 
+    seconds: 20
   when: deleteproj.changed == true
 
-- name: create sanitytest project
-  k8s:
-    state: present
-    src: roles/create_project/files/project.yaml
+- name: Create test project | create the test project
+  shell: "oc new-project {{testproject}} --skip-config-write=true"
 
 - name: deploy application | prepare nginx yaml
   template:
@@ -78,24 +46,17 @@
     dest: roles/create_project/files/nginxsvc.yaml
 
 - name: deploy application | create nginx pvc
-  k8s: 
-    state: present
-    src: roles/create_project/files/nginxpvc.yaml
+  shell: "oc create -f roles/create_project/files/nginxpvc.yaml"
+  when: storageclass is defined
 
 - name: deploy application | deploy nginx deploymentconfig
-  k8s:
-    state: present
-    src: roles/create_project/files/nginx.yaml
+  shell: "oc create -f roles/create_project/files/nginx.yaml"
 
 - name: deploy application | create nginx service
-  k8s:
-    state: present
-    src: roles/create_project/files/nginxsvc.yaml
+  shell: "oc create -f roles/create_project/files/nginxsvc.yaml"
 
 - name: deploy application | create route for nginx
-  k8s:
-    state: present
-    src: roles/create_project/files/nginxroute.yaml
+  shell: "oc create -f roles/create_project/files/nginxroute.yaml"
 
 - name: check | pods are up
   shell: "oc get pods -n {{testproject}} |grep -i nginx|grep -i Running"
@@ -122,10 +83,6 @@
     return_content: yes
   when: storageclass is defined
 
-- name: delete project
-  k8s:
-    state: absent
-    api_version: v1
-    kind: Namespace
-    namespace: sanitytest
-    name: sanitytest
+- name: Delete a project
+  shell: "oc delete project {{testproject}}"
+

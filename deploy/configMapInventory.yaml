@@ -9,29 +9,29 @@ data:
     ansible_ssh_user=core
     ansible_become=false
     timeout=60
-    ocpappsdomain=apps.ocp42.sales.lab.tlv.redhat.com
-    openshift_console_api=apps.ocp42.sales.lab.tlv.redhat.com
-    localregistry="docker.io/nginx:latest"
-    testproject=sanity-test
-    storageclass=glusterfs-storage
+    ocpappsdomain=apps.ocp43-test.sales.lab.tlv.redhat.com
+    openshift_console_api=apps.ocp43-test.sales.lab.tlv.redhat.com
+    localregistry="quay.io/ypery/nginx:latest"
+    testproject=sanitytest
+    storageclass=thin
     etcdSkip=True
     ocpversion=4
 
     [masters]
-    control-plane-0.ocp42.sales.lab.tlv.redhat.com
-    control-plane-1.ocp42.sales.lab.tlv.redhat.com
-    control-plane-2.ocp42.sales.lab.tlv.redhat.com
+    control-plane-0.ocp43-test.sales.lab.tlv.redhat.com
+    control-plane-1.ocp43-test.sales.lab.tlv.redhat.com
+    control-plane-2.ocp43-test.sales.lab.tlv.redhat.com
 
     [etcd:children]
     masters
 
     [nodes]
-    compute-0.ocp42.sales.lab.tlv.redhat.com
-    compute-1.ocp42.sales.lab.tlv.redhat.com
-    control-plane-0.ocp42.sales.lab.tlv.redhat.com
-    control-plane-1.ocp42.sales.lab.tlv.redhat.com
-    control-plane-2.ocp42.sales.lab.tlv.redhat.com
-
+    control-plane-0.ocp43-test.sales.lab.tlv.redhat.com
+    control-plane-1.ocp43-test.sales.lab.tlv.redhat.com
+    control-plane-2.ocp43-test.sales.lab.tlv.redhat.com
+    compute-0.ocp43-test.sales.lab.tlv.redhat.com
+    compute-1.ocp43-test.sales.lab.tlv.redhat.com
+    compute-2.ocp43-test.sales.lab.tlv.redhat.com
     [nodes:children]
     masters
 

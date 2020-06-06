@@ -1,16 +1,14 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  annotations:
-    openshift.io/host.generated: "true"
-  labels:
-    app: nginx
   name: nginx
   namespace: sanitytest
 spec:
-  host: nginx-sanitytest.apps.ocp43-test.sales.lab.tlv.redhat.com
+  port:
+    targetPort: 80
   to:
     kind: Service
     name: nginx
     weight: 100
   wildcardPolicy: None
+

@@ -4,7 +4,7 @@ metadata:
   labels:
     app: nginx
   name: nginx
-  namespace: sanity-test
+  namespace: sanitytest
 spec:
   replicas: 1
   template:
@@ -14,20 +14,14 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: docker.io/nginx:latest
+        image: quay.io/ypery/nginx:latest
         ports:
         - name: web
           containerPort: 80
         volumeMounts:
-        - name: rook-ceph-block-vol1
-          mountPath: /usr/share/nginx/html
-          readOnly: false
         - mountPath: /var/log/nginx
           name: log
       volumes:
-      - name: rook-ceph-block-vol1
-        persistentVolumeClaim:
-          claimName: rook-ceph-block-claim
       - name: log
         emptyDir: {}
       imagePullPolicy: Always

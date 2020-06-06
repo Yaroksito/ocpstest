@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: sanitytest
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: quay.io/ypery/nginx
+          ports:
+          - name: web
+            containerPort: 80
+          volumeMounts:
+          - mountPath: /var/log/nginx
+            name: log
+        volumes:
+        - name: log
+          emptyDir: {}
+        imagePullPolicy: Always
+    triggers:
+    - type: ConfigChange
+    strategy:
+      type: Rolling
+    paused: false
+    revisionHistoryLimit: 2
+    minReadySeconds: 0
+
